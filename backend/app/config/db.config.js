@@ -18,5 +18,6 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.user = require('../model/user.model.js')(sequelize, Sequelize);
+db.list1 = require('../model/list1.model.js')(sequelize, Sequelize);
+db.list2 = require('../model/list2.model.js')(sequelize, Sequelize);
 module.exports = db;

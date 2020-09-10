@@ -1,5 +1,3 @@
-const verifySignUp = require('./verifySignUp');
-const authJwt = require('./verifyJwtToken');
 
 module.exports = function (app) {
   const controller = require('../controller/controller.js');
@@ -12,11 +10,9 @@ module.exports = function (app) {
   });
 
 
-  app.post('/api/auth/signin', controller.signin);
-
-
-  app.post('api/auth/signup', [authJwt.verifyToken, verifySignUp.checkDuplicateEmail], controller.signup);
-
+  app.post('/api/addEntry', controller.addEntry);
+  app.post('/api/changeList', controller.changeList);
+  app.get('/api/loadData', controller.loadData);
   
 
 

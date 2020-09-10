@@ -1,69 +1,110 @@
 const db = require('../config/db.config.js');
-const config = require('../config/config.js');
-var fs = require('fs');
-var FlakeId = require('flake-idgen');
-var flakeIdGen = new FlakeId();
-var intformat = require('biguint-format');
 
-const User = db.user;
+const List1 = db.list1;
+const List2 = db.list2;
 
 
+exports.addEntry = (req, res) => {
+  if (req.body.change == 1) {
+    List1.create({
+      name: req.body.name,
+    }).then(() => {
+      res.send({
+        message: 'Entry Added Successfully!'
+      });
+    }).catch(err => {
+      res.status(500).send({
+        reason: err.message
+      });
+    })
+  } else {
+    List2.create({
+      name: req.body.name,
+    }).then(() => {
+      res.send({
+        message: 'Entry Added Successfully!'
+      });
+    }).catch(err => {
+      res.status(500).send({
+        reason: err.message
+      });
+    })
+  }
+  
+}
 
+exports.changeList = (req, res) => {
+  if (req.body.change == 1) {
+    List2.destroy({
+      where: {
+        id: req.body.id
+      }
+    }).then(() => {
+      List1.create({
+        name: req.body.name,
+      }).then(() => {
+        res.send({
+          message: 'Entry Added Successfully!'
+        });
+      }).catch(err => {
+        res.status(500).send({
+          reason: err.message
+        });
+      })
+    }).catch(err => {
+      res.status(500).send({
+        reason: err.message
+      });
+    })
+    
+  } else {
+    List1.destroy({
+      where: {
+        id: req.body.id
+      }
+    }).then(() => {
+      List2.create({
+        name: req.body.name,
+      }).then(() => {
+        res.send({
+          message: 'Entry Added Successfully!'
+        });
+      }).catch(err => {
+        res.status(500).send({
+          reason: err.message
+        });
+      })
+    }).catch(err => {
+      res.status(500).send({
+        reason: err.message
+      });
+    })
+  }
+  
+}
 
-var jwt = require('jsonwebtoken');
-var bcrypt = require('bcryptjs');
-
-exports.signup = (req, res) => {
-  User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8)
-  }).then(() => {
-    res.send({
-      message: 'Registered Successfully!'
-    });
+exports.loadData = (_req, res) => {
+  List1.findAll({
+    attributes: ['id', 'name']
+  }).then(list1 => {
+    List2.findAll({
+      attributes: ['id', 'name']
+    }).then(list2 => {
+      res.status(200).send({
+        'description': 'Lists Data',
+        'list1': list1,
+        'list2': list2
+      });
+    }).catch(err => {
+      res.status(500).send({
+        'description': 'Cannot Access List 2 Page',
+        'error': err
+      });
+    })
   }).catch(err => {
     res.status(500).send({
-      reason: err.message
+      'description': 'Cannot Access List 1 Page',
+      'error': err
     });
   })
 }
-exports.signin = (req, res) => {
-
-  User.findOne({
-    where: {
-      email: req.body.email
-    }
-  }).then(user => {
-
-    if (!user) {
-      return res.status(404).send({
-        reason: 'Incorrect Email or Password'
-      });
-    }
-
-    var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-    if (!passwordIsValid) {
-      return res.status(404).send({
-        reason: 'Incorrect Email or Password'
-      });
-    }
-
-    var token = jwt.sign({
-      id: user.id
-    }, config.secret, {
-      expiresIn: 86400
-    });
-    res.status(200).send({
-      auth: true,
-      accessToken: token,
-      email: user.email,
-      name: user.name
-    });
-  }).catch(err => {
-    res.status(500).send({
-      reason: err.message
-    });
-  })
-}
-

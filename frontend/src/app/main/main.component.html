@@ -1,0 +1,80 @@
+<div class="container">
+  <div class="row mt-5">
+    <div class="container">
+      <div class="example-container">
+        <h2>List 1</h2>
+
+        <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="list1" [cdkDropListConnectedTo]="[doneList]"
+          class="example-list" (cdkDropListDropped)="drop($event, 1)">
+          <div class="example-box pl-2" *ngFor="let item of list1" cdkDrag>{{item.name}}</div>
+          <form class="example-form" (ngSubmit)="onSubmit(1)" [formGroup]="addEntry1FormGroup" #myform1="ngForm">
+            <div class="row mt-2 h-100 justify-content-center mb-0 pb-0">
+              <div class="col-md-8 my-auto">
+                <mat-form-field class="example-full-width" appearance="fill">
+                  <mat-label>Name</mat-label>
+                  <input matInput type="text" placeholder="Enter Name..." [formControl]="this.form1.name">
+                </mat-form-field>
+              </div>
+              <div class="col-md-2 my-auto">
+                <button mdbBtn type="submit" size="sm" color="white" mdbWavesEffect
+                  class="round-button mr-auto pl-2 pr-2">
+                  <mdb-icon fas icon="plus"></mdb-icon>
+                </button>
+              </div>
+
+            </div>
+            <div class="row mt-2 h-100 mb-0 pb-0">
+              <div class="col-md-8 my-auto example-full-width">
+                <div class="container-fluid mt-0 ml-4">
+                  <mdb-error
+                    *ngIf="form1.name.invalid && (form1.name.dirty || form1.name.touched || myform1.submitted)">
+                    {{ getNameError(1) }}
+                  </mdb-error>
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+      <div class="example-container">
+        <h2>List 2</h2>
+
+        <div cdkDropList #doneList="cdkDropList" [cdkDropListData]="list2" [cdkDropListConnectedTo]="[todoList]"
+          class="example-list" (cdkDropListDropped)="drop($event, 2)">
+          <div class="example-box" *ngFor="let item of list2" cdkDrag>{{item.name}}</div>
+          <form class="example-form" (ngSubmit)="onSubmit(2)" [formGroup]="addEntry2FormGroup" #myform2="ngForm">
+            <div class="row mt-2 h-100 justify-content-center mb-0 pb-0">
+              <div class="col-md-8 my-auto">
+                <mat-form-field class="example-full-width" appearance="fill">
+                  <mat-label>Name</mat-label>
+                  <input matInput type="text" placeholder="Enter Name..." [formControl]="this.form2.name">
+                </mat-form-field>
+              </div>
+              <div class="col-md-2 my-auto">
+                <button mdbBtn type="submit" size="sm" color="white" mdbWavesEffect
+                  class="round-button mr-auto pl-2 pr-2">
+                  <mdb-icon fas icon="plus"></mdb-icon>
+                </button>
+              </div>
+
+            </div>
+            <div class="row mt-2 h-100 mb-0 pb-0">
+              <div class="col-md-8 my-auto example-full-width">
+                <div class="container-fluid mt-0 ml-4">
+                  <mdb-error
+                    *ngIf="form2.name.invalid && (form2.name.dirty || form2.name.touched || myform2.submitted)">
+                    {{ getNameError(2) }}
+                  </mdb-error>
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

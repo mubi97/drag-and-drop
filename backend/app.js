@@ -15,7 +15,7 @@ const db = require('./app/config/db.config.js');
 
 db.sequelize.sync();
 
-var server = app.listen(8080, function () {
+var server = app.listen(8000, function () {
 
   var host = server.address().address
   var port  = server.address().port
